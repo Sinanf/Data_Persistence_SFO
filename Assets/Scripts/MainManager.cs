@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,27 +8,19 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
-    public static MainManager Instance;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text HighscoreText;
     public GameObject GameOverText;
 
     private bool m_Started = false;
     private int m_Points;
-    private int highscore;
-    public string username;
+    public int highScore;
 
     private bool m_GameOver = false;
-    
-
-    private void Awake()
-    {
-        // LoadUserData(); 
-    }
-
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +39,7 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
     }
 
     private void Update()
@@ -55,7 +49,7 @@ public class MainManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 m_Started = true;
-                float randomDirection = Random.Range(-1.0f, 1.0f);
+                float randomDirection = UnityEngine.Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
                 forceDir.Normalize();
 
@@ -65,6 +59,8 @@ public class MainManager : MonoBehaviour
         }
         else if (m_GameOver)
         {
+
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -74,6 +70,7 @@ public class MainManager : MonoBehaviour
                 SceneManager.LoadScene(0);
             }
         }
+
     }
 
     void AddPoint(int point)
@@ -86,51 +83,12 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
-        // SaveData();
+
     }
 
-    [System.Serializable]
-    class SaveData
-    {
-        /*
-         * Data need to covert JSON
 
-        public string name;
-        public int m_Points;
-        internal int highscore;
 
-        */
-    }
 
-    public void SaveUserData()
-    {
-        /* 
-         * Saving data from userinput and score
-         
-        SaveData data = new SaveData();
-        data.highscore = m_Points;
-        data.name = username;
 
-        string json = JsonUtility.ToJson(data);
-
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
-        */
-    }
-
-    public void LoadUserData()
-    {
-        /*
-         * Loading previous highscore and the user   
-         
-        string path = Application.persistentDataPath + "/savefile.json";
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-            highscore = data.highscore;
-        }
-        */ 
-    }
 
 }
